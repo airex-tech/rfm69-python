@@ -141,11 +141,13 @@ class RFM69(object):
         else:
             return None
 
-    def send_packet(self, data, preamble=None):
+    def send_packet(self, data, preamble=None, target=None):
         """ Transmit a packet. If you've configured the RFM to use variable-length
             packets, this function will add a length byte for you.
 
             The radio will be returned to the standby state.
+
+            target -- node Id to send to, will also add source address
 
             data -- this should be a bytearray. If it isn't, we'll try and convert it,
                     but you might end up with encoding issues, especially if you use
@@ -154,7 +156,9 @@ class RFM69(object):
                     preambles may result in more reliable decoding, at the expense of
                     spectrum use.
         """
-        data = bytearray(data)
+        # Add extra address info for use with RadioHead
+        if target:
+            data = struct.pack("BB", target, self._address) + bytearray(data)
 
         if self.config.packet_config_1.variable_length:
             data = [len(data)] + list(data)
@@ -217,6 +221,7 @@ class RFM69(object):
 
     def set_address(self, value):
         """ Set the address of the node """
+        self._address = value
         driver.spi_write(Register.NODEADRS, value)
 
     def set_high_power(self, on):
