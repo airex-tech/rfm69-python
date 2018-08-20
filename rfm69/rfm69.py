@@ -33,7 +33,7 @@ def wait_for(condition, timeout=5, check_time=0.005):
 
 class RFM69(object):
     """ Interface for the RFM69 series of radio modules. """
-    def __init__(self, reset_pin=None, dio0_pin=None, spi_channel=None, config=None):
+    def __init__(self, reset_pin=None, dio0_pin=None, spi_channel=None, config=None, high_power=False):
         """ Initialise the object and configure the receiver.
 
             reset_pin -- the GPIO pin number which is attached to the reset pin of the RFM69
@@ -46,6 +46,7 @@ class RFM69(object):
         self.dio0_pin = dio0_pin
         self.spi_channel = spi_channel
         self.config = config
+        self.high_power = high_power
         self.rx_restarts = 0
         self.init_gpio()
         self.init_spi()
@@ -102,6 +103,7 @@ class RFM69(object):
         self.packet_ready_event = Event()
         self.rx_restarts = 0
         GPIO.add_event_detect(self.dio0_pin, GPIO.RISING, callback=self.payload_ready_interrupt)
+        self.set_high_power(False)
         self.set_mode(OpMode.RX)
         packet_received = False
         while True:
@@ -160,6 +162,7 @@ class RFM69(object):
         self.log.debug("Initialising Tx...")
         start = time()
         self.set_mode(OpMode.TX, wait=False)
+        self.set_high_power(self.high_power)
         wait_for(lambda: self.read_register(IRQFlags1).tx_ready)
 
         self.log.debug("In Tx mode (took %.3fs)", time() - start)
@@ -215,6 +218,15 @@ class RFM69(object):
     def set_address(self, value):
         """ Set the address of the node """
         driver.spi_write(Register.NODEADRS, value)
+
+    def set_high_power(self, on):
+        """ Turn high power on and off (RFM69H(C)W only) """
+        if on:
+            driver.spi_write(Register.TESTPA1, 0x5D)
+            driver.spi_write(Register.TESTPA2, 0x7C)
+        else:
+            driver.spi_write(Register.TESTPA1, 0x55)
+            driver.spi_write(Register.TESTPA2, 0x70)
 
     def get_rssi(self):
         """ Get the current RSSI in dBm. """
