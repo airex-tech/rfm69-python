@@ -2,6 +2,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 from time import sleep, time
 from threading import Event
 import logging
+import struct
 
 import RPi.GPIO as GPIO
 import spidev
