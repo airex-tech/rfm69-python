@@ -207,32 +207,32 @@ class RFM69(object):
         """ Turn on encryption if key provided """
         if key:
             mode = rfm69.configuration.OpMode() # defaults to standby
-            driver.write_register(mode)
-            driver.spi.xfer(
+            self.write_register(mode)
+            self.spi.xfer(
                 [Register.AESKEY1 | 0x80] + \
                 [int(ord(i)) for i in list(key)])
             # AES and auto RX restart
-            driver.spi_write(Register.PACKETCONFIG2, 3)
+            self.spi_write(Register.PACKETCONFIG2, 3)
 
     def set_channel(self, value):
         """ Sets a channel using sync values """
-        driver.spi_write(Register.SYNCCONFIG, 0x88)
-        driver.spi_write(Register.SYNCVALUE1, 0x2D)
-        driver.spi_write(Register.SYNCVALUE2, value)
+        self.spi_write(Register.SYNCCONFIG, 0x88)
+        self.spi_write(Register.SYNCVALUE1, 0x2D)
+        self.spi_write(Register.SYNCVALUE2, value)
 
     def set_address(self, value):
         """ Set the address of the node """
         self._address = value
-        driver.spi_write(Register.NODEADRS, value)
+        self.spi_write(Register.NODEADRS, value)
 
     def set_high_power(self, on):
         """ Turn high power on and off (RFM69H(C)W only) """
         if on:
-            driver.spi_write(Register.TESTPA1, 0x5D)
-            driver.spi_write(Register.TESTPA2, 0x7C)
+            self.spi_write(Register.TESTPA1, 0x5D)
+            self.spi_write(Register.TESTPA2, 0x7C)
         else:
-            driver.spi_write(Register.TESTPA1, 0x55)
-            driver.spi_write(Register.TESTPA2, 0x70)
+            self.spi_write(Register.TESTPA1, 0x55)
+            self.spi_write(Register.TESTPA2, 0x70)
 
     def get_rssi(self):
         """ Get the current RSSI in dBm. """
