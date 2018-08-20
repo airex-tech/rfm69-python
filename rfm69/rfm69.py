@@ -69,9 +69,9 @@ class RFM69(object):
         self.log.debug("Initialising RFM...")
         GPIO.setup(self.reset_pin, GPIO.OUT)
         GPIO.output(self.reset_pin, 1)
-        sleep(0.05)
-        GPIO.setup(self.reset_pin, GPIO.IN)
-        sleep(0.05)
+        sleep(0.1)
+        GPIO.output(self.reset_pin, 0)
+        sleep(0.1)
         if (self.spi_read(Register.VERSION) != 0x24):
             raise RadioError("Failed to initialise RFM69")
 
