@@ -287,6 +287,10 @@ class RFM69(object):
         resp = self.spi_read(register_cls.REGISTER)
         return register_cls.unpack(resp)
 
+    def read_registers(self):
+        for register in range(1, 0x50):
+            yield self.spi_read(register)
+
     def write_register(self, register):
         self.spi_write(register.REGISTER, register.pack())
 
