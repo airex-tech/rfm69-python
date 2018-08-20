@@ -87,9 +87,9 @@ class PacketConfig1(RegisterValue):
     DCFreeWhitening     = 0b10
 
     def __init__(self):
-        self.variable_length = False
+        self.variable_length = True
         self.dc_free = self.DCFreeOff
-        self.crc = True
+        self.crc = False
         self.crc_auto_clear_off = False
         self.address_filtering = 0b00
 
