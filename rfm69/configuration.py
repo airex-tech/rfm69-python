@@ -139,7 +139,7 @@ class RFM69Configuration(object):
         self.rssi_threshold = 200
 
         self.rx_timeout_1 = 0
-        self.rx_timeout_2 = 40
+        self.rx_timeout_2 = 0
 
         self.sync_config = RF.SYNC_ON | RF.SYNC_FIFOFILL_AUTO | RF.SYNC_SIZE_4 | RF.SYNC_TOL_0
         self.sync_value_1 = 0
