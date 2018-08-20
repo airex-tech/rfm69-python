@@ -125,7 +125,8 @@ class RFM69Configuration(object):
 
         self.afc_ctl = RF.AFCLOWBETA_OFF
 
-        self.pa_level = RF.PALEVEL_PA0_ON | RF.PALEVEL_PA1_OFF | RF.PALEVEL_PA2_OFF | 0x18
+        # Default power level to 20 for RFM69HW
+        self.pa_level = RF.PALEVEL_PA1_ON | RF.PALEVEL_PA2_ON | (20 + 11) & 0x1F
         self.pa_ramp = RF.PARAMP_40
 
         self.ocp = RF.OCP_ON | RF.OCP_TRIM_95
