@@ -206,8 +206,7 @@ class RFM69(object):
     def set_encryption(self, key):
         """ Turn on encryption if key provided """
         if key:
-            mode = rfm69.configuration.OpMode() # defaults to standby
-            self.write_register(mode)
+            self.set_mode(OpMode.Standby)
             self.spi.xfer(
                 [Register.AESKEY1 | 0x80] + \
                 [int(ord(i)) for i in list(key)])
