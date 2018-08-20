@@ -316,3 +316,8 @@ class RFM69(object):
 
     def write_fifo(self, data):
         self.spi.xfer2([Register.FIFO | 0x80] + data)
+
+    def disconnect(self):
+        self.set_high_power(False)
+        self.set_mode(OpMode.OpMode.Sleep)
+        GPIO.cleanup()
