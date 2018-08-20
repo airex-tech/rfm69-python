@@ -201,16 +201,20 @@ class RFM69(object):
             mode = rfm69.configuration.OpMode() # defaults to standby
             driver.write_register(mode)
             driver.spi.xfer(
-                [rfm69.constants.Register.AESKEY1 | 0x80] + \
+                [Register.AESKEY1 | 0x80] + \
                 [int(ord(i)) for i in list(key)])
             # AES and auto RX restart
-            driver.spi_write(rfm69.constants.Register.PACKETCONFIG2, 3)
+            driver.spi_write(Register.PACKETCONFIG2, 3)
 
     def set_channel(self, value):
-    	""" Sets a channel using sync values """
-        driver.spi_write(rfm69.constants.Register.SYNCCONFIG, 0x88)
-        driver.spi_write(rfm69.constants.Register.SYNCVALUE1, 0x2D)
-        driver.spi_write(rfm69.constants.Register.SYNCVALUE2, value)
+        """ Sets a channel using sync values """
+        driver.spi_write(Register.SYNCCONFIG, 0x88)
+        driver.spi_write(Register.SYNCVALUE1, 0x2D)
+        driver.spi_write(Register.SYNCVALUE2, value)
+
+    def set_address(self, value):
+        """ Set the address of the node """
+        driver.spi_write(Register.NODEADRS, value)
 
     def get_rssi(self):
         """ Get the current RSSI in dBm. """
