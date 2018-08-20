@@ -119,9 +119,9 @@ class RFM69Configuration(object):
         self.fdev_msb = RF.FDEVMSB_5000
         self.fdev_lsb = RF.FDEVLSB_5000
 
-        self.frf_msb = RF.FRFMSB_915
-        self.frf_mid = RF.FRFMID_915
-        self.frf_lsb = RF.FRFLSB_915
+        self.frf_msb = RF.FRFMSB_868
+        self.frf_mid = RF.FRFMID_868
+        self.frf_lsb = RF.FRFLSB_868
 
         self.afc_ctl = RF.AFCLOWBETA_OFF
 
