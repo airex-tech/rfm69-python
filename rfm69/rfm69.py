@@ -319,5 +319,5 @@ class RFM69(object):
 
     def disconnect(self):
         self.set_high_power(False)
-        self.set_mode(OpMode.OpMode.Sleep)
+        self.set_mode(OpMode.Sleep)
         GPIO.cleanup()
