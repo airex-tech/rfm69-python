@@ -142,7 +142,7 @@ class RFM69(object):
         else:
             return None
 
-    def send_packet(self, data, preamble=None, target=None):
+    def send_packet(self, data, preamble=None):
         """ Transmit a packet. If you've configured the RFM to use variable-length
             packets, this function will add a length byte for you.
 
@@ -157,16 +157,18 @@ class RFM69(object):
                     preambles may result in more reliable decoding, at the expense of
                     spectrum use.
         """
-        # Add extra address info for use with RadioHead
-        if target:
-            data = struct.pack("BB", target, self._address) + bytearray(data)
+        self.set_mode(OpMode.Standby, wait=True)
 
+		# If it has variable length set then we need to send length
         if self.config.packet_config_1.variable_length:
             data = [len(data)] + list(data)
-
+        
+        # Write BEFORE changing to TX mode
+        self.write_fifo(data)
+        
         self.log.debug("Initialising Tx...")
         start = time()
-        self.set_mode(OpMode.TX, wait=False)
+        self.set_mode(OpMode.TX, wait=True)
         self.set_high_power(self.high_power)
         wait_for(lambda: self.read_register(IRQFlags1).tx_ready)
 
@@ -174,8 +176,6 @@ class RFM69(object):
 
         if preamble:
             sleep(preamble)
-
-        self.write_fifo(data)
         wait_for(lambda: self.read_register(IRQFlags2).packet_sent)
 
         self.set_mode(OpMode.Standby)
