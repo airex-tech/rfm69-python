@@ -157,13 +157,13 @@ class RFM69(object):
                     preambles may result in more reliable decoding, at the expense of
                     spectrum use.
         """
-        self.set_mode(OpMode.Standby, wait=True)
-
+        data = list(bytearray(data))
 		# If it has variable length set then we need to send length
         if self.config.packet_config_1.variable_length:
-            data = [len(data)] + list(data)
+            data = [len(data)] + data
         
         # Write BEFORE changing to TX mode
+        self.set_mode(OpMode.Standby, wait=True)
         self.write_fifo(data)
         
         self.log.debug("Initialising Tx...")
