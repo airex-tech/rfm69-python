@@ -215,12 +215,14 @@ class RFM69(object):
 
     def set_channel(self, value):
         """ Sets a channel using sync values """
+        self.log.debug("Set channel to {}".format(value))
         self.spi_write(Register.SYNCCONFIG, 0x88)
         self.spi_write(Register.SYNCVALUE1, 0x2D)
         self.spi_write(Register.SYNCVALUE2, value)
 
     def set_address(self, value):
         """ Set the address of the node """
+        self.log.debug("Set address to {}".format(value))
         self._address = value
         self.spi_write(Register.NODEADRS, value)
 
