@@ -20,3 +20,7 @@ Written for use with the [ukhas.net](http://ukhas.net) project.
   C/Wiring)
 * [ukhasnet LPC810 node](https://github.com/jamescoxon/LPC810)
 * [Python code for the beaglebone black](https://github.com/wcalvert/rfm69-python)
+
+## Authors
+* Russ Garrett - *original code*
+* Will Frank-Gemmill - *amendments made to this fork*

@@ -2,13 +2,13 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 from setuptools import find_packages, setup
 
 setup(name="rfm69",
-      version="0.3",
+      version="0.4",
       description="Library for accessing the HopeRF RFM69-series radio modules via GPIO/SPI.",
-      author="Russ Garrett",
+      author="Russ Garrett, Will Frank-Gemmill",
       author_email='russ@garrett.co.uk',
       platforms=["any"],
       license="MIT",
-      url="http://github.com/russss/rfm69-python",
+      url="https://github.com/Dogmans/rfm69-python",
       packages=find_packages(),
       install_requires=[
           'enum >= 0.4.6',
