@@ -2,7 +2,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 from setuptools import find_packages, setup
 
 setup(name="rfm69",
-      version="0.4",
+      version="0.5",
       description="Library for accessing the HopeRF RFM69-series radio modules via GPIO/SPI.",
       author="Russ Garrett, Will Frank-Gemmill",
       author_email='russ@garrett.co.uk',

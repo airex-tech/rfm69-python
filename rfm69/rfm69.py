@@ -109,6 +109,7 @@ class RFM69(object):
         packet_received = False
         while True:
             irqflags = self.read_register(IRQFlags1)
+            irqflags2 = self.read_register(IRQFlags2)
             if not irqflags.mode_ready:
                 self.log.error("Module out of ready state: %s", irqflags)
                 break
@@ -116,7 +117,6 @@ class RFM69(object):
                 # Once the RFM's receiver has been started by a signal over the RSSI
                 # threshold, it will continue running (possibly with stale AGC/AFC
                 # parameters). Detect this and reset the receiver.
-                irqflags2 = self.read_register(IRQFlags2)
                 self.log.debug("Restarting Rx on timeout. RSSI: %s, sync: %s, fifo_not_empty: %s, crc: %s",
                                irqflags.rssi, irqflags.sync_address_match, irqflags2.fifo_not_empty,
                                irqflags2.crc_ok)
@@ -125,7 +125,7 @@ class RFM69(object):
                 self.rx_restarts += 1
             if timeout is not None and time() - start > timeout:
                 break
-            if self.packet_ready_event.wait(1):
+            if irqflags2.payload_ready or self.packet_ready_event.wait(1):
                 packet_received = True
                 break
 
