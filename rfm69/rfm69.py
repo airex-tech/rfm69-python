@@ -229,11 +229,9 @@ class RFM69(object):
     def set_high_power(self, on):
         """ Turn high power on and off (RFM69H(C)W only) """
         if on:
-            self.spi_write(Register.OCP, RF.OCP_OFF)
             self.spi_write(Register.TESTPA1, 0x5D)
             self.spi_write(Register.TESTPA2, 0x7C)
         else:
-            self.spi_write(Register.OCP, RF.OCP_ON | RF.OCP_TRIM_95)
             self.spi_write(Register.TESTPA1, 0x55)
             self.spi_write(Register.TESTPA2, 0x70)
 
