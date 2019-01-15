@@ -69,11 +69,13 @@ class RFM69(object):
     def reset(self):
         """ Reset the module, then check it's working. """
         self.log.debug("Initialising RFM...")
+        # Make sure that it does not trigger bogus interrupt
+        GPIO.remove_event_detect(self.dio0_pin)
         GPIO.setup(self.reset_pin, GPIO.OUT)
         GPIO.output(self.reset_pin, 1)
-        sleep(0.1)
+        sleep(0.05)
         GPIO.output(self.reset_pin, 0)
-        sleep(0.1)
+        sleep(0.05)
         if (self.spi_read(Register.VERSION) != 0x24):
             raise RadioError("Failed to initialise RFM69")
 
