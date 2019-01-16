@@ -89,7 +89,7 @@ class PacketConfig1(RegisterValue):
     def __init__(self):
         self.variable_length = True
         self.dc_free = self.DCFreeOff
-        self.crc = False
+        self.crc = True
         self.crc_auto_clear_off = False
         self.address_filtering = 0b00
 
