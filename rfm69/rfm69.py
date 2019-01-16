@@ -103,6 +103,7 @@ class RFM69(object):
         start = time()
         self.packet_ready_event = Event()
         self.rx_restarts = 0
+        GPIO.remove_event_detect(self.dio0_pin)
         GPIO.add_event_detect(self.dio0_pin, GPIO.RISING, callback=self.payload_ready_interrupt)
         self.set_high_power(False)
         self.set_mode(OpMode.RX)
