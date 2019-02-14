@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import IntEnum
 
 
-class Register(Enum):
+class Register(IntEnum):
     FIFO          = 0x00
     OPMODE          = 0x01
     DATAMODUL      = 0x02
@@ -88,7 +88,7 @@ class Register(Enum):
     TESTAFC       = 0x71
 
 
-class RF(Enum):
+class RF(IntEnum):
     OPMODE_SEQUENCER_OFF                     = 0x80
     OPMODE_SEQUENCER_ON                      = 0x00 # Default
 
