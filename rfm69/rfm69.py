@@ -1,11 +1,9 @@
-from __future__ import division, absolute_import, print_function, unicode_literals
+# from __future__ import division, absolute_import, print_function, unicode_literals # TODO - alternative
 from time import sleep, time
-from threading import Event
+# from threading import Event # TODO - alternative
 import logging
-import struct
 
-import RPi.GPIO as GPIO
-import spidev
+from machine import Pin, SPI
 
 from .configuration import IRQFlags1, IRQFlags2, OpMode, Temperature1, RSSIConfig
 from .constants import Register, RF
@@ -43,22 +41,16 @@ class RFM69(object):
             config    -- an instance of `RFM69Configuration`
         """
         self.log = logging.getLogger(__name__)
-        self.reset_pin = reset_pin
-        self.dio0_pin = dio0_pin
+        self.reset_pin = Pin(reset_pin, Pin.OUT)
+        self.dio0_pin = Pin(dio0_pin, Pin.IN)
         self.spi_channel = spi_channel
         self.config = config
         self.high_power = high_power
         self.rx_restarts = 0
-        self.init_gpio()
         self.init_spi()
         self.reset()
         self.write_config()
         self.log.info("Initialised successfully")
-
-    def init_gpio(self):
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setwarnings(False)
-        GPIO.setup(self.dio0_pin, GPIO.IN)
 
     def init_spi(self):
         self.spi = spidev.SpiDev()
@@ -69,17 +61,16 @@ class RFM69(object):
     def reset(self):
         """ Reset the module, then check it's working. """
         self.log.debug("Initialising RFM...")
-        GPIO.setup(self.reset_pin, GPIO.OUT)
-        GPIO.output(self.reset_pin, 1)
+        self.reset_pin.value(1)
         sleep(0.1)
-        GPIO.output(self.reset_pin, 0)
+        self.reset_pin.value(0)
         sleep(0.1)
         if (self.spi_read(Register.VERSION) != 0x24):
             raise RadioError("Failed to initialise RFM69")
 
-    def payload_ready_interrupt(self, pin):
-        self.log.debug("Payload Ready Interrupt")
-        self.packet_ready_event.set()
+#     def payload_ready_interrupt(self, pin):
+#         self.log.debug("Payload Ready Interrupt")
+#         self.packet_ready_event.set()
 
     def write_config(self):
         """ Write the full configuration to the module. This is called on
@@ -103,7 +94,7 @@ class RFM69(object):
         start = time()
         self.packet_ready_event = Event()
         self.rx_restarts = 0
-        GPIO.add_event_detect(self.dio0_pin, GPIO.RISING, callback=self.payload_ready_interrupt)
+        #self.dio_pin.irq(trigger=Pin.IRQ_RISING, handler=self.payload_ready_interrupt)
         self.set_high_power(False)
         self.set_mode(OpMode.RX)
         packet_received = False
@@ -125,11 +116,12 @@ class RFM69(object):
                 self.rx_restarts += 1
             if timeout is not None and time() - start > timeout:
                 break
-            if irqflags2.payload_ready or self.packet_ready_event.wait(1):
+            if irqflags2.payload_ready: #or self.packet_ready_event.wait(1):
                 packet_received = True
                 break
+            sleep(0.01)
 
-        GPIO.remove_event_detect(self.dio0_pin)
+        #self.dio_pin.irq(trigger=0, handler=self.payload_ready_interrupt)
         self.set_mode(OpMode.Standby, wait=False)
 
         if packet_received:
@@ -323,4 +315,3 @@ class RFM69(object):
     def disconnect(self):
         self.set_high_power(False)
         self.set_mode(OpMode.Sleep)
-        GPIO.cleanup()
