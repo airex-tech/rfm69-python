@@ -3,8 +3,7 @@
 from machine import Pin, SPI
 from time import sleep, time
 # from threading import Event # TODO - alternative
-import logging
-
+from .logging import getLogger
 from .configuration import IRQFlags1, IRQFlags2, OpMode, Temperature1, RSSIConfig
 from .constants import Register, RF
 
@@ -40,7 +39,7 @@ class RFM69(object):
             spi_channel -- the SPI channel used by the RFM69 - not sure what this means
             config    -- an instance of `RFM69Configuration`
         """
-        self.log = logging.getLogger(__name__)
+        self.log = getLogger(__name__)
         self.reset_pin = Pin(reset_pin, Pin.OUT)
         self.dio0_pin = Pin(dio0_pin, Pin.IN)
         self.config = config
