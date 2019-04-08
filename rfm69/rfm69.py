@@ -1,9 +1,9 @@
+# TODO - check behaviour of SS pin
 # from __future__ import division, absolute_import, print_function, unicode_literals # TODO - alternative
+from machine import Pin, SPI
 from time import sleep, time
 # from threading import Event # TODO - alternative
 import logging
-
-from machine import Pin, SPI
 
 from .configuration import IRQFlags1, IRQFlags2, OpMode, Temperature1, RSSIConfig
 from .constants import Register, RF
@@ -37,13 +37,12 @@ class RFM69(object):
 
             reset_pin -- the GPIO pin number which is attached to the reset pin of the RFM69
             dio0_pin  -- the GPIO pin number which is attached to the DIO0 pin of the RFM69
-            spi_channel -- the SPI channel used by the RFM69
+            spi_channel -- the SPI channel used by the RFM69 - not sure what this means
             config    -- an instance of `RFM69Configuration`
         """
         self.log = logging.getLogger(__name__)
         self.reset_pin = Pin(reset_pin, Pin.OUT)
         self.dio0_pin = Pin(dio0_pin, Pin.IN)
-        self.spi_channel = spi_channel
         self.config = config
         self.high_power = high_power
         self.rx_restarts = 0
@@ -53,10 +52,9 @@ class RFM69(object):
         self.log.info("Initialised successfully")
 
     def init_spi(self):
-        self.spi = spidev.SpiDev()
-        self.spi.open(self.spi_channel, 0)
-        self.spi.bits_per_word = 8
-        self.spi.max_speed_hz = 50000
+        self.spi = SPI(1, baudrate=50000)
+        # self.spi.bits_per_word = 8
+        # self.spi.max_speed_hz = 50000
 
     def reset(self):
         """ Reset the module, then check it's working. """
@@ -297,20 +295,24 @@ class RFM69(object):
 
     def spi_read(self, register):
         data = [register & ~0x80, 0]
-        resp = self.spi.xfer2(data)
+        resp = bytearray(2)
+        self.spi.write_readinto(data, resp)
+        # We get the length again as the first character of the buffer
         return resp[1]
 
     def spi_burst_read(self, register, length):
         data = [register & ~0x80] + ([0] * (length))
+        resp = bytearray(length + 1)
+        self.spi.write_readinto(data, resp)
         # We get the length again as the first character of the buffer
-        return self.spi.xfer2(data)[1:]
+        return resp[1:]
 
     def spi_write(self, register, value):
         data = [register | 0x80, value]
-        self.spi.xfer2(data)
+        self.spi.write(data)
 
     def write_fifo(self, data):
-        self.spi.xfer2([Register.FIFO | 0x80] + data)
+        self.spi.write([Register.FIFO | 0x80] + data)
 
     def disconnect(self):
         self.set_high_power(False)
