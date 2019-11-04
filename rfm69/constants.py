@@ -82,6 +82,7 @@ class Register(IntEnum):
     AESKEY16      = 0x4D
     TEMP1          = 0x4E
     TEMP2          = 0x4F
+    TESTLNA        = 0x58
     TESTPA1          = 0x5A # only present on RFM69HW/SX1231H
     TESTPA2          = 0x5C # only present on RFM69HW/SX1231H
     TESTDAGC      = 0x6F
@@ -1012,6 +1013,10 @@ class RF(IntEnum):
     TEMP1_MEAS_RUNNING                       = 0x04
     TEMP1_ADCLOWPOWER_ON                     = 0x01 # Default
     TEMP1_ADCLOWPOWER_OFF                    = 0x00
+    
+    # Reg TestLna
+    TEST_LNA_ON                              = 0x2D 
+    TEST_LNA_OFF                             = 0x1B # Default
 
     # Reg Test Dagc                             = 0x6F : demodulator config and IO mode config
     DAGC_NORMAL                              = 0x00 # Reset value

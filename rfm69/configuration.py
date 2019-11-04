@@ -131,6 +131,7 @@ class RFM69Configuration(object):
 
         self.ocp = RF.OCP_ON | RF.OCP_TRIM_95
         self.lna = RF.LNA_ZIN_200
+        self.test_lna = RF.TEST_LNA_OFF # Default to standard sensitivity
         self.rx_bw = RF.RXBW_DCCFREQ_010 | RF.RXBW_MANT_24 | RF.RXBW_EXP_5
         self.afc_fei = RF.AFCFEI_AFCAUTO_OFF | RF.AFCFEI_AFCAUTOCLEAR_OFF
 
@@ -176,6 +177,7 @@ class RFM69Configuration(object):
         regs[Register.PARAMP] = self.pa_ramp
         regs[Register.OCP] = self.ocp
         regs[Register.LNA] = self.lna
+        regs[Register.TESTLNA] = self.test_lna
         regs[Register.RXBW] = self.rx_bw
         regs[Register.AFCFEI] = self.afc_fei
         regs[Register.DIOMAPPING1] = self.dio_mapping_1
