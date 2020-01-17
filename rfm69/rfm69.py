@@ -91,7 +91,7 @@ class RFM69(object):
             self.spi_write(register, value)
             count += 1
 
-        self.log.debug("%s configuration registers written.", count)
+        self.log.debug("%s configuration registers written." % count)
 
     def wait_for_packet(self, timeout=None):
         """ Put the module in receive mode, and block until we receive a packet.
@@ -194,7 +194,7 @@ class RFM69(object):
             irqflags = self.read_register(IRQFlags1)
             if irqflags.mode_ready:
                 duration = time() - start
-                self.log.debug("Mode changed to %s in %.3fs", mode, duration)
+                self.log.debug("Mode changed to %s in %.3fs" % (mode, duration))
                 return
             sleep(0.005)
             if time() - start > 5:
@@ -222,7 +222,7 @@ class RFM69(object):
 
     def set_address(self, value):
         """ Set the address of the node """
-        self.log.debug("Set address to %d", value)
+        self.log.debug("Set address to %d" % value)
         self._address = value
         self.spi_write(Register.NODEADRS, value)
 
