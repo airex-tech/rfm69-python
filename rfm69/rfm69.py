@@ -137,7 +137,7 @@ class RFM69(object):
             data_length = self.spi_read(Register.FIFO)
             data = self.spi_burst_read(Register.FIFO, data_length)
 
-            self.log.info("Received message: %s, RSSI: %s", data, rssi)
+            self.log.info("Received message: %s, RSSI: %s" % (data, rssi))
             return (bytearray(data), rssi)
         else:
             return None
@@ -172,14 +172,14 @@ class RFM69(object):
         self.set_high_power(self.high_power)
         wait_for(lambda: self.read_register(IRQFlags1).tx_ready)
 
-        self.log.debug("In Tx mode (took %.3fs)", time() - start)
+        self.log.debug("In Tx mode (took %.3fs)" % time() - start)
 
         if preamble:
             sleep(preamble)
         wait_for(lambda: self.read_register(IRQFlags2).packet_sent)
 
         self.set_mode(OpMode.Standby)
-        self.log.debug("Packet (%r) sent in %.3fs", data, time() - start)
+        self.log.debug("Packet (%r) sent in %.3fs" % (data, time() - start))
 
     def set_mode(self, mode, wait=True):
         """ Change the mode of the radio. Mode values can be found in the OpMode class.
