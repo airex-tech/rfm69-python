@@ -172,7 +172,7 @@ class RFM69(object):
         self.set_high_power(self.high_power)
         wait_for(lambda: self.read_register(IRQFlags1).tx_ready)
 
-        self.log.debug("In Tx mode (took %.3fs)" % time() - start)
+        self.log.debug("In Tx mode (took %.3fs)" % (time() - start))
 
         if preamble:
             sleep(preamble)
