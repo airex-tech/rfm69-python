@@ -168,8 +168,8 @@ class RFM69(object):
         
         self.log.debug("Initialising Tx...")
         start = time()
-        self.set_mode(OpMode.TX, wait=True)
         self.set_high_power(self.high_power)
+        self.set_mode(OpMode.TX, wait=True)
         wait_for(lambda: self.read_register(IRQFlags1).tx_ready)
 
         self.log.debug("In Tx mode (took %.3fs)" % (time() - start))
